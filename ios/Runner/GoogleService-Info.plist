@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>992354695095-m9imqpuc3pe0ul0i47t8vnalv04mhh19.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.992354695095-m9imqpuc3pe0ul0i47t8vnalv04mhh19</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDn0eEm8wTiI41j8y9adHabu7aom9OLoew</string>
+	<key>GCM_SENDER_ID</key>
+	<string>992354695095</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.kreiseck.rushcash</string>
+	<key>PROJECT_ID</key>
+	<string>rush-cash-a44fc</string>
+	<key>STORAGE_BUCKET</key>
+	<string>rush-cash-a44fc.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:992354695095:ios:3267aea9e160d5e31fda32</string>
+</dict>
+</plist>

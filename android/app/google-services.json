@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "992354695095",
+    "project_id": "rush-cash-a44fc",
+    "storage_bucket": "rush-cash-a44fc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:992354695095:android:90ec22c7b073b40a1fda32",
+        "android_client_info": {
+          "package_name": "com.kreiseck.rushcash"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "992354695095-qb7reagnj6n66h14ec91gl9i9705pmsh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClKkK8Ff7HJkMewYcKQgB6RKjCh9Ykt7Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "992354695095-qb7reagnj6n66h14ec91gl9i9705pmsh.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "992354695095-aheto5c7no49gjcravgu87kbtaogdddk.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.rushcash"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
