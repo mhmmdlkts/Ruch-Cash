@@ -3,15 +3,16 @@ import 'package:rushcash/models/stand.dart';
 
 import '../services/firestore_paths_service.dart';
 
-class Bazaar {
+class Customer {
   String? id;
   late double balance;
+  late String bazaar;
 
-  Bazaar.create() {
+  Customer.create() {
     balance = 0;
   }
 
-  Bazaar.fromSnapshot(DocumentSnapshot<Object?> snap) {
+  Customer.fromSnapshot(DocumentSnapshot<Object?> snap) {
     if (snap.data() == null) {
       return;
     }
@@ -21,11 +22,15 @@ class Bazaar {
     if (o.containsKey('balance')) {
       balance = o['balance'];
     }
+    if (o.containsKey('bazaar')) {
+      bazaar = o['bazaar'];
+    }
   }
 
   Map<String, dynamic> toJson({bool withNull = true}) {
     Map<String, dynamic> map = {
       'balance': balance,
+      'bazaar': bazaar,
     };
     if (withNull) {
       return map;

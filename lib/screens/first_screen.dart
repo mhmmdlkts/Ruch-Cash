@@ -12,7 +12,6 @@ class FirstScreen extends StatefulWidget {
 }
 
 class _FirstScreenState extends State<FirstScreen> {
-  int _selectedIndex = 1;
   bool showSplashScreen = true;
 
   @override

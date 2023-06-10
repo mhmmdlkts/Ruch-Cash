@@ -6,7 +6,7 @@ class Person {
   String? uid;
   String? email;
   String? name;
-  String? bazaarId;
+  String? bazaar;
   int? role;
 
   Person.create({required this.email}) {
@@ -29,8 +29,8 @@ class Person {
     if (o.containsKey('role')) {
       role = o['role'];
     }
-    if (o.containsKey('bazaarId')) {
-      bazaarId = o['bazaarId'];
+    if (o.containsKey('bazaar')) {
+      bazaar = o['bazaar'];
     }
   }
 
@@ -39,7 +39,7 @@ class Person {
       'email': email,
       'name': name,
       'role': role,
-      'bazaarId': bazaarId,
+      'bazaar': bazaar,
     };
     if (withNull) {
       return map;

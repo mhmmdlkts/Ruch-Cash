@@ -3,26 +3,29 @@ description: A new Flutter project.
 
 publish_to: 'none'
 
-version: 1.0.0+1
+version: 1.0.3+4
 
 environment:
-  sdk: '>=2.19.6 <3.0.0'
+  sdk: '>=2.18.4 <3.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
 
+  firebase_core: ^2.13.0
+  cloud_firestore: ^4.7.1
+  firebase_auth: ^4.6.1
+  firebase_storage: ^11.2.1
+  firebase_ui_auth: ^1.4.1
+
   cupertino_icons: ^1.0.2
-  firebase_core: ^2.8.0
-  cloud_firestore: ^4.4.5
-  firebase_auth: ^4.3.0
-  firebase_storage: ^11.0.16
-  firebase_ui_auth: ^1.1.17
   jiffy: ^5.0.0
   image_picker: ^0.8.7
   image_cropper: ^3.0.1
   photo_view: ^0.14.0
   qr_code_scanner: ^1.0.1
+  qr_flutter: ^4.1.0
+  shared_preferences: ^2.1.1
 
 dev_dependencies:
   flutter_test:

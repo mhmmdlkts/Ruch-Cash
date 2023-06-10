@@ -1,9 +1,9 @@
 
 import 'package:rushcash/services/bazaar_service.dart';
 import 'package:rushcash/services/person_service.dart';
+import 'package:rushcash/services/saved_qr_service.dart';
 
 class InitService {
-
   static bool isInited = false;
   static bool isIniting = false;
 

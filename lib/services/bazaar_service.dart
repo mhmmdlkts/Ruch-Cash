@@ -10,7 +10,7 @@ class BazaarService {
   static late Bazaar bazaar;
 
   static Future initBazaar({DateTime? now}) async {
-    DocumentSnapshot snapshot = await FirestorePathsService.getBazaarsDoc(bazaarId: PersonService.person.bazaarId!).get();
+    DocumentSnapshot snapshot = await FirestorePathsService.getBazaarsDoc(bazaarId: PersonService.person.bazaar!).get();
     bazaar = Bazaar.fromSnapshot(snapshot);
     await bazaar.init();
 

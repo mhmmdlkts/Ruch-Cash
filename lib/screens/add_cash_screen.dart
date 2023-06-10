@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:rushcash/services/balance_service.dart';
+import 'package:rushcash/services/bazaar_service.dart';
 import 'package:rushcash/widgets/qr_scanner_widget.dart';
 
 import '../services/scanner_service.dart';
@@ -19,6 +20,7 @@ class _AddCashScreenState extends State<AddCashScreen> {
   final _formKey = GlobalKey<FormState>();
   bool isLoading = false;
   String? _qrData;
+  double? _balance;
 
   @override
   void initState() {
@@ -34,10 +36,16 @@ class _AddCashScreenState extends State<AddCashScreen> {
       isLoading = true;
     });
     if (_formKey.currentState!.validate()) {
-      double amount = double.parse(_amountController.text);
-      await BalanceService.addBalance(_qrData!, amount);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Zahlung in Höhe von $amount € hinzugefügt')));
-      reset();
+      bool isSuccess = await BalanceService.addBalance(_qrData!, inputVal!, BazaarService.bazaar.id!);
+      if (isSuccess) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Zahlung in Höhe von ${inputVal!} € hinzugefügt')));
+        reset();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Fehler'), backgroundColor: Colors.redAccent,));
+        setState(() {
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -49,10 +57,24 @@ class _AddCashScreenState extends State<AddCashScreen> {
       isLoading = true;
     });
     if (_formKey.currentState!.validate()) {
-      double amount = double.parse(_amountController.text);
-      await BalanceService.addBalance(_qrData!, -amount);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Zahlung in Höhe von ${-amount} € hinzugefügt')));
-      reset();
+      bool isSuccess = await BalanceService.addBalance(_qrData!, -inputVal!, BazaarService.bazaar.id!);
+      if (isSuccess) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Zahlung in Höhe von ${-inputVal!} € hinzugefügt')));
+        reset();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Fehler'), backgroundColor: Colors.redAccent,));
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+  double? get inputVal {
+    try {
+      return double.parse(_amountController.text.replaceAll(',', '.'));
+    } catch (e) {
+      return null;
     }
   }
 
@@ -61,6 +83,7 @@ class _AddCashScreenState extends State<AddCashScreen> {
       ScannerService.reset();
       isLoading = false;
       _amountController.clear();
+      _balance = null;
     });
   }
 
@@ -99,6 +122,10 @@ class _AddCashScreenState extends State<AddCashScreen> {
                   }
                   setState(() {
                     _qrData = val;
+                  });
+                }, onBalanceLoaded: (double? b) {
+                  setState((){
+                      _balance = b;
                   });
                 }),
               ),
@@ -150,7 +177,19 @@ class _AddCashScreenState extends State<AddCashScreen> {
                 children: [
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: !isLoading && _qrData != null ? _onAddCashPressed : null,
+                      onPressed: inputVal != null && !isLoading && _qrData != null ? ((_balance??0)>inputVal!? _onWithdrawCashPressed:null) : null,
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.red, // Ändere die Hintergrundfarbe für Auszahlung
+                      ),
+                      child: Container(
+                        padding: EdgeInsets.all(20),
+                        child: Text('Auszahlung'),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: inputVal != null && !isLoading && _qrData != null ? _onAddCashPressed : null,
                       style: ElevatedButton.styleFrom(
                         primary: Colors.green, // Ändere die Hintergrundfarbe für Einzahlung
                       ),
@@ -160,18 +199,6 @@ class _AddCashScreenState extends State<AddCashScreen> {
                       ),
                     ),
                   ),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: !isLoading && _qrData != null ? _onWithdrawCashPressed : null,
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.red, // Ändere die Hintergrundfarbe für Auszahlung
-                      ),
-                      child: Container(
-                        padding: EdgeInsets.all(20),
-                        child: Text('Auszahlung'),
-                      ),
-                    ),
-                  )
                 ],
               )
             ],
