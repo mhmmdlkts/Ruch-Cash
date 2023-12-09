@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:rushcash/models/stand_list.dart';
 import 'package:rushcash/services/bazaar_service.dart';
 import 'package:rushcash/services/firestore_paths_service.dart';
 
 import '../models/stand.dart';
+import '../widgets/feedback_popup_widget.dart';
 
 class BalanceService {
 
@@ -22,7 +25,7 @@ class BalanceService {
 
 
 
-  static Future<bool> addBalance(String id, double balance, String bazaarId) async {
+  static Future<bool> addBalance(String id, double balance, String bazaarId, {bool isLocked = false, required BuildContext context}) async {
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     DocumentReference ref = FirestorePathsService.getCustomersDoc(customerKey: id);
     DocumentReference bazaarRef = FirestorePathsService.getBazaarsDoc(bazaarId: bazaarId);
@@ -33,12 +36,18 @@ class BalanceService {
       DocumentSnapshot snapshot = await transaction.get(ref);
       DocumentSnapshot bazaarSnapshot = await transaction.get(bazaarRef);
 
+      print(ref.path);
+      print(bazaarRef.path);
+
       double currentBalance;
 
       if (!snapshot.exists) {
         // Erstellen des Benutzers, wenn er nicht vorhanden ist
         currentBalance = 0;
-        transaction.set(ref, {'balance': currentBalance});
+        transaction.set(ref, {
+          'balance': currentBalance,
+          'locked': isLocked
+        });
       } else {
         // Aktualisieren des Saldos
         currentBalance = snapshot.get('balance') + 0.0;
@@ -73,10 +82,26 @@ class BalanceService {
 
         success = true;
       } else {
-        throw Exception('Das aktualisierte Guthaben darf nicht negativ sein');
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return FeedbackPopupWidget(
+              errorMessage: 'Der Auszahlungsbetrag darf das Guthaben nicht übersteigen.',
+            );
+          },
+        );
+        return false;
       }
     }).catchError((error) {
-      throw Exception('Fehler beim Hinzufügen des Guthabens: $error');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return FeedbackPopupWidget(
+            errorMessage: 'Fehler beim Hinzufügen des Guthabens: $error',
+          );
+        },
+      );
+      return false;
     });
 
     return success;

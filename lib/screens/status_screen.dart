@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rushcash/models/bazaar.dart';
 import 'package:rushcash/models/stand.dart';
 import 'package:rushcash/services/bazaar_service.dart';
+import 'package:rushcash/services/person_service.dart';
 
 class StatusScreen extends StatefulWidget {
   const StatusScreen({Key? key}) : super(key: key);
@@ -35,14 +36,62 @@ class _StatusScreenState extends State<StatusScreen> {
             ListView(
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              children: stands().map((e) => statusItem(e.name??'', e.totalSalesPrice, asFixed: 0, subfix: null)).toList(),
-            )
+              children: stands().map((e) => statusItem(e.name??'', e.totalSalesPrice, asFixed: 2)).toList(),
+            ),
+            if (PersonService.person.role! >= 6)
+              ElevatedButton(
+                onPressed: () {},
+                onLongPress: () async {
+                  await _showResetConfirmationDialog();
+                  setState(() {});
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                ),
+                child: Container(
+                  padding: EdgeInsets.all(20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Reset'),
+                    ],
+                  ),
+                ),
+              )
           ],
         ),
       ),
     );
   }
-  
+
+  Future _showResetConfirmationDialog() async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Zurücksetzen bestätigen'),
+          content: Text('Sind Sie sicher, dass Sie es zurücksetzen möchten?'),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                await BazaarService.resetBazaar();
+                Navigator.of(context).pop();
+              },
+              child: Text('Ja'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Nein'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
   List<Stand> stands () {
     return BazaarService.bazaar.stands;
   }

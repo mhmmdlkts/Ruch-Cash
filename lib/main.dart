@@ -55,6 +55,7 @@ class _MyApp extends State<MyApp> {
         colorScheme: ColorScheme.fromSwatch().copyWith(
           primary: firstColor,
           secondary: secondColor,
+          background: Colors.white,
         ),
       ),
       home: SavedQrService.qrData!=null?ShowQrCodeScreen(customerId: SavedQrService.qrData!):StreamBuilder(

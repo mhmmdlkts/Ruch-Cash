@@ -9,7 +9,6 @@ class Stand {
   String? bazaarId;
   String? name;
   double? price;
-  List<String>? seller;
   int? totalSales;
   int? status;
   int count = 0;
@@ -31,9 +30,6 @@ class Stand {
     id = snap.id;
     if (o.containsKey('name')) {
       name = o['name'];
-    }
-    if (o.containsKey('seller')) {
-      seller = List.of(o['seller']??[]).map((e) => e.toString()).toList();
     }
     if (o.containsKey('price')) {
       price = o['price'] + 0.0;
@@ -64,7 +60,6 @@ class Stand {
     Map<String, dynamic> map = {
       'name': name,
       'price': price,
-      'seller': seller,
       'totalSales': totalSales,
       'status': status,
     };

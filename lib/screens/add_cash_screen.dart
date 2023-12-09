@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:rushcash/services/balance_service.dart';
 import 'package:rushcash/services/bazaar_service.dart';
+import 'package:rushcash/services/person_service.dart';
+import 'package:rushcash/widgets/feedback_popup_widget.dart';
 import 'package:rushcash/widgets/qr_scanner_widget.dart';
 
 import '../services/scanner_service.dart';
@@ -21,6 +23,7 @@ class _AddCashScreenState extends State<AddCashScreen> {
   bool isLoading = false;
   String? _qrData;
   double? _balance;
+  bool isLocked = false;
 
   @override
   void initState() {
@@ -36,12 +39,21 @@ class _AddCashScreenState extends State<AddCashScreen> {
       isLoading = true;
     });
     if (_formKey.currentState!.validate()) {
-      bool isSuccess = await BalanceService.addBalance(_qrData!, inputVal!, BazaarService.bazaar.id!);
+      bool isSuccess = await BalanceService.addBalance(_qrData!, inputVal!, BazaarService.bazaar.id!, isLocked: isLocked, context: context);
       if (isSuccess) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Zahlung in Höhe von ${inputVal!} € hinzugefügt')));
+
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return FeedbackPopupWidget(
+              success: true,
+              errorTitle: 'Erfolgreich',
+              errorMessage: 'Einzahlung erfolgreich',
+            );
+          },
+        );
         reset();
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Fehler'), backgroundColor: Colors.redAccent,));
         setState(() {
           isLoading = false;
         });
@@ -57,12 +69,21 @@ class _AddCashScreenState extends State<AddCashScreen> {
       isLoading = true;
     });
     if (_formKey.currentState!.validate()) {
-      bool isSuccess = await BalanceService.addBalance(_qrData!, -inputVal!, BazaarService.bazaar.id!);
+      bool isSuccess = await BalanceService.addBalance(_qrData!, -inputVal!, BazaarService.bazaar.id!, context: context);
       if (isSuccess) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Zahlung in Höhe von ${-inputVal!} € hinzugefügt')));
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return FeedbackPopupWidget(
+              success: true,
+              errorTitle: 'Erfolgreich',
+              errorMessage: 'Ausgezahlt erfolgreich.',
+            );
+          },
+        );
         reset();
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Fehler'), backgroundColor: Colors.redAccent,));
+
         setState(() {
           isLoading = false;
         });
@@ -130,6 +151,22 @@ class _AddCashScreenState extends State<AddCashScreen> {
                 }),
               ),
               SizedBox(width: isLandscape ? 16.0 : 0, height: isLandscape ? 0 : 16.0),
+              if (PersonService.person.role! >= 5  && _qrData != null && _balance == 0)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Icon(isLocked?Icons.lock_outline:Icons.lock_open),
+                    Checkbox(
+                        value: isLocked,
+                        onChanged: (val) {
+                          setState(() {
+                            isLocked = val??false;
+                          });
+                        }
+                    ),
+                    Container(width: 20)
+                  ],
+                ),
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 40),
                 child: Form(
@@ -177,7 +214,7 @@ class _AddCashScreenState extends State<AddCashScreen> {
                 children: [
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: inputVal != null && !isLoading && _qrData != null ? ((_balance??0)>inputVal!? _onWithdrawCashPressed:null) : null,
+                      onPressed: inputVal != null && !isLoading && _qrData != null ? ((_balance??0)>= inputVal!? _onWithdrawCashPressed:null) : null,
                       style: ElevatedButton.styleFrom(
                         primary: Colors.red, // Ändere die Hintergrundfarbe für Auszahlung
                       ),

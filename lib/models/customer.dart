@@ -6,6 +6,7 @@ import '../services/firestore_paths_service.dart';
 class Customer {
   String? id;
   late double balance;
+  late bool isLocked;
   late String bazaar;
 
   Customer.create() {
@@ -21,6 +22,9 @@ class Customer {
     id = snap.id;
     if (o.containsKey('balance')) {
       balance = o['balance'];
+    }
+    if (o.containsKey('locked')) {
+      isLocked = o['locked'];
     }
     if (o.containsKey('bazaar')) {
       bazaar = o['bazaar'];

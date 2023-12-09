@@ -11,6 +11,7 @@ import 'package:rushcash/widgets/qr_scanner_widget.dart';
 
 import '../models/basket.dart';
 import '../services/scanner_service.dart';
+import '../widgets/feedback_popup_widget.dart';
 
 class SellScreen extends StatefulWidget {
   final StandList standList;
@@ -36,12 +37,24 @@ class _SellScreenState extends State<SellScreen> {
     });
     if (_scannedUserId != null) {
       await BalanceService.sellItems(_scannedUserId!, widget.standList.stands??[]).then((_) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Artikel erfolgreich verkauft')),
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return FeedbackPopupWidget(
+              success: true,
+              errorTitle: 'Erfolgreich',
+              errorMessage: 'Artikel erfolgreich verkauft',
+            );
+          },
         );
       }).catchError((error) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Fehler beim Verkauf: $error')),
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return FeedbackPopupWidget(
+              errorMessage: 'Fehler beim Verkauf: $error',
+            );
+          },
         );
       });
       reset();
@@ -206,5 +219,5 @@ class _SellScreenState extends State<SellScreen> {
     );
   }
 
-  bool canSell() => widget.standList.elementCount > 0 && (balance??0) > (widget.standList.price) ;
+  bool canSell() => widget.standList.elementCount > 0 && (balance??0) >= (widget.standList.price) ;
 }
